@@ -9,54 +9,56 @@ const Header = ({title}) => {
 
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
-const Content = ({text, counter}) => <p>{text} {counter}</p>
-
-const Positive = (props) => {
-    const good = props.counter[0]
-    const neutral = props.counter[1]
-    const bad = props.counter[2]
-    let pos = (good/(good+neutral+bad))*100
-
-    if(isNaN(pos)) {
-        pos = 0
+const Statistic = ({text, counter}) => {
+    if(text !== 'positive') {
+        return(
+            <>
+                <tr>
+                    <td>{text}</td>
+                    <td>{counter}</td>
+                </tr>
+            </>
+        )
+    } else {
+        return(
+            <>
+                <tr>
+                    <td>{text}</td>
+                    <td>{counter} %</td>
+                </tr>
+            </>
+        )
     }
-
-    return (
-        <p>{props.text} {pos} %</p>
-    )
 }
 
-const Average = (props) => {
-    const good = props.counter[0]
-    const neutral = props.counter[1]
-    const bad = props.counter[2]
-    let avg = (good+(bad*(-1)))/(good+neutral+bad)
-
-    if(isNaN(avg)) {
-        avg = 0
-    }
-
-    return (
-        <p>{props.text} {avg}</p>
-    )
-}
+const Simple = ({text}) => <p>{text}</p> 
 
 const Statistics = (props) => {
     const good = props.content[0]
     const neutral = props.content[1]
     const bad = props.content[2]
 
-    return (
-        <>
-            <Header title='statistics'/>
-            <Content text='good' counter={good}/>
-            <Content text='neutral' counter={neutral}/>
-            <Content text='bad' counter={bad}/>
-            <Content text='all' counter={good+neutral+bad}/>
-            <Average text='average' counter={[good,neutral,bad]}/>
-            <Positive text='positive' counter={[good,neutral,bad]}/>
-        </>
-    )
+    if(good === 0 && neutral === 0 && bad === 0) {
+        return (
+            <>
+                <Simple text='no feedback given'/>
+            </>
+        )
+    } else {
+        return (
+            <table>
+                <tbody>
+                    <Statistic text='good' counter={good}/>
+                    <Statistic text='neutral' counter={neutral}/>
+                    <Statistic text='bad' counter={bad}/>
+                    <Statistic text='all' counter={good+neutral+bad}/>
+                    <Statistic text='average' counter={(good+(bad*(-1)))/(good+neutral+bad)}/>
+                    <Statistic text='positive' counter={(good/(good+neutral+bad))*100}/>
+                </tbody>
+            </table>
+        )
+    }
+
 }
 
 const App = () => {
@@ -74,6 +76,7 @@ const App = () => {
             <Button onClick={handleGood} text='good'/>
             <Button onClick={handleNeutral} text='neutral'/>
             <Button onClick={handleBad} text='bad'/>
+            <Header title='statistics'/>
             <Statistics content={[good, neutral, bad]}/>
         </>
     )
