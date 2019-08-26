@@ -1,0 +1,71 @@
+0.4 new note:
+
+    title Create new note on page
+
+    Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+    Server-->Browser: HTML-code
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+    Server->Browser: main.css
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+    Server->Browser: main.js
+    note over Browser:
+    Browser starts executing js-code
+    that requests JSON data from Server 
+    end note
+
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+    Server-->Browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+    note over Browser:
+    Browser executes the event handler
+    that renders notes to display
+    end note
+
+    ==> Link to diagram: https://www.websequencediagrams.com/?lz=dGl0bGUgQ3JlYXRlIG5ldyBub3RlIG9uIHBhZ2UKCkJyb3dzZXItPlNlcnZlcjogSFRUUCBQT1NUIGh0dHBzOi8vZnVsbHN0YWNrLWV4YW1wbGVhcHAuaGVyb2t1YXBwLmNvbS9uZXdfbm90ZQoAQAYtLT4AUQc6IEhUTUwtY29kZQBUF0dFAD0tbWFpbi5jc3MAYggAXwoAEQkAHkpqAE8YanMKAIJBBnZlciAAgWMIAIJECCBzdGFydHMgZXhlY3V0aW5nIGpzAIF8BnRoYXQgcmVxdWVzdHMgSlNPTiBkYXRhIGZyb20gAIJ7BiAKZW5kAIMfBQCDBBgAggIvZGF0YS5qc29uAIMJE1t7IGNvbnRlbnQ6ICJIVE1MIGlzIGVhc3kiLCBkYXRlOiAiMjAxOS0wNS0yMyIgfSwgLi4uXQoAgWAcAIFvBmVzIHRoZSBldmVudCBoYW5kbGVyAIF2CG5kZXJzAIUBBXMgdG8gZGlzcGxheQCBbgk&s=default
+
+////////////////////////////////////////////////////////////////////////
+
+0.5: Single app page
+
+    title Create new note on page
+
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+    Server-->Browser: HTML-code
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+    Server->Browser: main.css
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+    Server->Browser: spa.js
+    note over Browser:
+    Browser starts executing js-code
+    that requests JSON data from Server 
+    end note
+
+    Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+    Server-->Browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+    note over Browser:
+    Browser executes the event handler
+    that renders notes to display
+    end note
+
+    ==> Link to diagram: https://www.websequencediagrams.com/?lz=dGl0bGUgQ3JlYXRlIG5ldyBub3RlIG9uIHBhZ2UKCkJyb3dzZXItPlNlcnZlcjogSFRUUCBHRVQgaHR0cHM6Ly9mdWxsc3RhY2stZXhhbXBsZWFwcC5oZXJva3VhcHAuY29tL3NwYQoAOgYtLT4ASwc6IEhUTUwtY29kZQAfRm1haW4uY3NzAGIIAF8KABEJAIEFSC5qAFMTABEHAII5BnZlciAAgWEIAII8CCBzdGFydHMgZXhlY3V0aW5nIGpzAIF6BnRoYXQgcmVxdWVzdHMgSlNPTiBkYXRhIGZyb20gAIJzBiAKZW5kAIMXBQCCTUdkYXRhLmpzb24AgwcTW3sgY29udGVudDogIkhUTUwgaXMgZWFzeSIsIGRhdGU6ICIyMDE5LTA1LTIzIiB9LCAuLi5dCgCBYBwAgW8GZXMgdGhlIGV2ZW50IGhhbmRsZXIAgXYIbmRlcnMAhHkFcyB0byBkaXNwbGF5AIFuCQ&s=default
+
+////////////////////////////////////////////////////////////////////////
+
+0.6 New note
+
+    title Create new note on page
+
+    Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+    note over Server:
+    Server receives Payload
+    in json format 
+    end note
+    Server-->Browser: HTTP 201 Created
+    note over Browser:
+    Browser starts executing js-code
+    that was requested earlier from
+    the Server 
+    end note
+
+    Link to diagram: https://www.websequencediagrams.com/?lz=dGl0bGUgQ3JlYXRlIG5ldyBub3RlIG9uIHBhZ2UKCkJyb3dzZXItPlNlcnZlcjogSFRUUCBQT1NUIGh0dHBzOi8vZnVsbHN0YWNrLWV4YW1wbGVhcHAuaGVyb2t1YXBwLmNvbS9uZXdfbm90ZV9zcGEKAFsGdmVyIABNBwoAVgYgcmVjZWl2ZXMgUGF5bG9hZAppbiBqc29uIGZvcm1hdCAKZW5kAIEaBQAqBy0tPgCBGAcAgRAHMjAxAIFDB2QAWwsAHAgAgUQIIHN0YXJ0cyBleGVjdXRpbmcganMtY29kZQp0aGF0IHdhcyByZXF1ZXN0ZWQgZWFybGllciBmcm9tCnRoZQCBLQcAgQIK&s=default
