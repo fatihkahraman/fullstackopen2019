@@ -41,6 +41,24 @@ const Average = (props) => {
     )
 }
 
+const Statistics = (props) => {
+    const good = props.content[0]
+    const neutral = props.content[1]
+    const bad = props.content[2]
+
+    return (
+        <>
+            <Header title='statistics'/>
+            <Content text='good' counter={good}/>
+            <Content text='neutral' counter={neutral}/>
+            <Content text='bad' counter={bad}/>
+            <Content text='all' counter={good+neutral+bad}/>
+            <Average text='average' counter={[good,neutral,bad]}/>
+            <Positive text='positive' counter={[good,neutral,bad]}/>
+        </>
+    )
+}
+
 const App = () => {
     const [good, setGood] = useState(0)
     const [neutral, setNeutral] = useState(0)
@@ -56,13 +74,7 @@ const App = () => {
             <Button onClick={handleGood} text='good'/>
             <Button onClick={handleNeutral} text='neutral'/>
             <Button onClick={handleBad} text='bad'/>
-            <Header title='statistics'/>
-            <Content text='good' counter={good}/>
-            <Content text='neutral' counter={neutral}/>
-            <Content text='bad' counter={bad}/>
-            <Content text='all' counter={good+neutral+bad}/>
-            <Average text='average' counter={[good,neutral,bad]}/>
-            <Positive text='positive' counter={[good,neutral,bad]}/>
+            <Statistics content={[good, neutral, bad]}/>
         </>
     )
 }
