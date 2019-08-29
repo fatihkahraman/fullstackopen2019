@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
-import Persons from './components/Persons';
-import axios from 'axios';
+import PersonDetail from './components/PersonDetail';
+import personService from './services/persons';
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -12,11 +12,11 @@ const App = () => {
   const [ allPersons, setAllPersons ] = useState([])
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-        setAllPersons(response.data)
+    personService
+      .getAll()
+      .then(data => {
+        setPersons(data)
+        setAllPersons(data)
       })
   },[])
 
@@ -40,58 +40,54 @@ const App = () => {
       number: newNumber
     }
 
-    let alert = false         // Alert flag
-    let copy = persons        // Contains all Persons
-    let copyAll = allPersons  // Only contains Persons to show
     const stringAllPersons = allPersons.map(p => p.name)  // Array of Strings containing only Person names
 
-
-    /* Checks if inserted name exists in persons array; adds Person to person array if not already in phonebook, else alerts message */
+    /* Checks if inserted name exists in persons array; adds Person to person and allPerson array if not already in phonebook, else alerts message */
     if(stringAllPersons.indexOf(newPerson.name) < 0) {
-      copy = persons.concat(newPerson)
-      copy = copy.filter(p => p.name !== '')
+      personService
+        .create(newPerson)
+        .then(data => {
+          setAllPersons(allPersons.concat(data))
+          setPersons(persons.concat(data))
+          setNewName('')
+          setNewNumber('')
+        })
     } else {
-      alert = true
-      window.alert(`${newName} is already added to phonebook`)
-    }
-
-    /* Checks if inserted name exists in allPersons array; adds Person to allPerson array if not already in phonebook, else alerts message */
-    if(stringAllPersons.indexOf(newPerson.name) < 0) {
-      if(!alert) {
-        copyAll = allPersons.concat(newPerson)
-        copyAll = copyAll.filter(p => p.name !== '')
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(stringAllPersons.indexOf(newPerson.name)+1, newPerson)
+          .then(() => {
+            personService
+              .getAll()
+              .then(data => {
+                console.log(data);
+                setAllPersons(data)
+                setPersons(data)
+                setNewName('')
+                setNewNumber('')
+              })
+          })
       }
-    } else if(!alert){
-      window.alert(`${newName} is already added to phonebook`)
     }
-
-    // ---- Outdated+buggy ----
-    //
-    // // New object-array with new person
-    // const tmpp = persons.concat(newPerson)
-
-    // // Filters empty strings
-    // const tmp = tmpp.filter(p => p.name !== '')
-
-    // // This is not an object-array, simply strings with names
-    // const namesArr = tmp.map(p => p.name)
-
-    // // Filtering unique names; namesArr.indexOf checks for duplicates
-    // const uniq = tmp.filter((person, index) => {
-    //   index++;
-    //   if(namesArr.indexOf(person.name, index) < 0){
-    //     return true
-    //   } else {
-    //     // window.alert(`${newName} is already added to phonebook`)
-    //     return false
-    //   }
-    // })
-
-    setPersons(copy)
-    setAllPersons(copyAll)
-    setNewName('')
-    setNewNumber('')
   }
+
+  const deletePerson = (name, id) => {
+    if(window.confirm(`Delete ${name} ?`)) {
+        personService
+            .deletes(id)
+            .then(() => {
+              personService
+                .getAll()
+                .then(data => {
+                  setAllPersons(data)
+                  setPersons(data)
+                })
+            })
+        
+    }
+}
+
+  const row = () => persons.map(p => <PersonDetail name={p.name} number={p.number} deletePerson={() => deletePerson(p.name, p.id)} key={p.id}/>)
 
   return (
     <div>
@@ -102,7 +98,7 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm onSubmit={addPerson} valueName={newName} valueNumber={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <Persons persons={persons}/>
+      {row()}
     </div>
   )
 }

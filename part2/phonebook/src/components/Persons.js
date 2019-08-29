@@ -1,12 +1,10 @@
 import React from 'react';
 import PersonDetail from './PersonDetail';
+import personService from '../services/persons';
 
-const Persons = ({persons}) => {
-    const row = () => persons.map(p => <PersonDetail name={p.name} number={p.number} key={p.name}/>)
-
+const Persons = ({persons, row}) => {
     return (
         <div>
-            {row()}
         </div>
     )
 }
