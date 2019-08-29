@@ -3,6 +3,7 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import PersonDetail from './components/PersonDetail';
 import personService from './services/persons';
+import Notification from './components/Notification';
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -10,6 +11,8 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
   const [ allPersons, setAllPersons ] = useState([])
+  const [ message, setMessage ] = useState(null)
+  const [ color, setColor ] = useState('')
 
   useEffect(() => {
     personService
@@ -51,6 +54,11 @@ const App = () => {
           setPersons(persons.concat(data))
           setNewName('')
           setNewNumber('')
+          setColor('green')
+          setMessage(`Added ${data.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
     } else {
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -66,6 +74,13 @@ const App = () => {
                 setNewName('')
                 setNewNumber('')
               })
+          })
+          .catch(error => {
+            setColor('red')
+            setMessage(`Information of ${newPerson.name} has already been removed from server`)
+            setTimeout(() => {
+            setMessage(null)
+          }, 3000)
           })
       }
     }
@@ -92,6 +107,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} color={color}/>
       <div>
         <Filter text='filter shown with' value={search} onChange={handleSearchChange}/>
       </div>
